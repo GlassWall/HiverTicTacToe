@@ -21,6 +21,7 @@ const grid = [];
 const GRID_LENGTH = 3;
 let moveCount =0;
 let turn = 'X';
+let n=3
 
 function initializeGrid() {
     for (let colIdx = 0;colIdx < GRID_LENGTH; colIdx++) {
@@ -76,84 +77,89 @@ function onBoxClick() {
     let newValue = 1;
     grid[colIdx][rowIdx] = newValue;
     checkWinner(colIdx, rowIdx, 1);
-    // while(true){
-    //   let newX = Math.floor(Math.random() * 4);
-    //   let newY = Math.floor(Math.random() * 4);
-    //   console.log(newX+":"+newY);
-    //   renderMainGrid();
-    //   if(grid[newX][newY]===0 && Number.isInteger((grid[newX][newY]))){
-    //     grid[newX][newY] = 2;
-    //     checkWinner(newX,newY,2);
-    //     break;
-    //   }
-    // }
-    flag = false;
-    for(var i=0;i<3;i++){
-      if(flag===true){
-        break;
-      }
-      for(var j=0;j<3;j++){
-        if(grid[i][j]===0){
-          grid[i][j]=2;
-          checkWinner(i,j,2);
-          flag = true;
-          break;
-        }
-      }
-    }
+    easyMode();
     renderMainGrid();
     addClickHandlers();
 }
-function checkWinner(x,y,s){
-  moveCount++;
-  var n=3;
-    if(s==1){
-      str = "You"
-    }else{
-      str = "PC"
+function easyMode(){
+  flag = false;
+  for(var i=0;i<3;i++){
+    if(flag===true){
+      break;
     }
-          for(var i = 0; i < n; i++){
-              if(grid[x][i] != s)
-                  break;
-              if(i == n-1){
-                  alert("Winner is "+str)
-                  return;
-              }
-          }
+    for(var j=0;j<3;j++){
+      if(grid[i][j]===0){
+        grid[i][j]=2;
+        checkWinner(i,j,2);
+        flag = true;
+        break;
+      }
+    }
+  }
+}
 
-          //Check Row
-          for(var i = 0; i < n; i++){
-              if(grid[i][y] != s)
-                  break;
-              if(i == n-1){
-                  alert("Winner is "+str)
-                  return;
-              }
-          }
+function columnCheck(str,s,x){
+  //Check Column
+  for(var i = 0; i < n; i++){
+      if(grid[x][i] != s)
+          break;
+      if(i == n-1){
+          alert("Winner is "+str)
+          return;
+      }
+  }
+}
+function rowCheck(str,s,y){
+  //Check Row
+  for(var i = 0; i < n; i++){
+      if(grid[i][y] != s)
+          break;
+      if(i == n-1){
+          alert("Winner is "+str)
+          return;
+      }
+  }
+}
+function diagCheck(str, s){
+  for(var i = 0; i < n; i++){
+      if(grid[i][i] != s)
+          break;
+      if(i == n-1){
+          alert("Winner is "+str)
+          return;
+      }
+  }
+}
 
+function antiDiagCheck(str,s){
+  for(var i = 0; i < n; i++){
+      if(grid[i][(n-1)-i] != s)
+          break;
+      if(i == n-1){
+          alert("Winner is "+str)
+          return;
+      }
+  }
+}
+
+function checkWinner(x,y,s){
+          moveCount++;
+          if(s==1){
+            str = "You"
+          }else{
+            str = "PC"
+          }
+          columnCheck(str, s,x);
+          rowCheck(str, s,y);
           //Diagonal
           if(x == y){
               //we're on a diagonal
-              for(var i = 0; i < n; i++){
-                  if(grid[i][i] != s)
-                      break;
-                  if(i == n-1){
-                      alert("Winner is "+str)
-                      return;
-                  }
-              }
+              diagCheck(str,s)
           }
 
           //Anti Diagonal
           if(x + y == n - 1){
-              for(var i = 0; i < n; i++){
-                  if(grid[i][(n-1)-i] != s)
-                      break;
-                  if(i == n-1){
-                      alert("Winner is "+str)
-                      return;
-                  }
-              }
+              antiDiagCheck(str,s)
           }
 
           //Check Draw
